@@ -10,4 +10,14 @@ window.addEventListener('message', (e) => {
   }
 });
 
+// Listen for progress from background and post back to website
+chrome.runtime.onMessage.addListener((msg) => {
+  if (msg.type === 'progress') {
+    window.postMessage({
+      type: 'AUTOAPPLY_PROGRESS',
+      payload: { processed: msg.processed, total: msg.total, active: msg.active }
+    }, '*');
+  }
+});
+
 console.log('AutoApply bridge loaded');

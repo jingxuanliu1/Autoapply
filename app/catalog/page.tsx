@@ -12,6 +12,8 @@ export default function CatalogPage() {
   const [q, setQ] = useState('');
   const [site, setSite] = useState<'all'|'greenhouse'|'lever'|'workday'|'other'>('all');
   const [limit, setLimit] = useState(100);
+  const [progress, setProgress] = useState<{processed: number; total: number; active: number} | null>(null);
+  const [processingJobs, setProcessingJobs] = useState<string[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -19,6 +21,13 @@ export default function CatalogPage() {
       setUser(u.user as any || null);
       await load();
     })();
+    
+    // Listen for progress updates from extension
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'AUTOAPPLY_PROGRESS') {
+        setProgress(e.data.payload);
+      }
+    });
   }, []);
 
   async function load() {
@@ -75,6 +84,23 @@ export default function CatalogPage() {
   return (
     <div style={{maxWidth: 1100}}>
       <h2>Catalog</h2>
+
+      {progress && (
+        <div style={{background:'#f0f9ff', border:'2px solid #3b82f6', borderRadius:8, padding:16, marginBottom:16}}>
+          <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8}}>
+            <h3 style={{margin:0}}>🚀 Auto-Apply in Progress</h3>
+            <span style={{fontSize:20, fontWeight:'bold', color:'#3b82f6'}}>
+              {progress.processed}/{progress.total}
+            </span>
+          </div>
+          <div style={{width:'100%', height:24, background:'#e0e0e0', borderRadius:12, overflow:'hidden', marginBottom:8}}>
+            <div style={{width:`${(progress.processed/progress.total)*100}%`, height:'100%', background:'linear-gradient(90deg, #10b981, #3b82f6)', transition:'width 0.3s'}}></div>
+          </div>
+          <div style={{fontSize:14, color:'#666'}}>
+            {progress.active > 0 ? `⚡ ${progress.active} jobs processing now...` : '✅ Complete!'}
+          </div>
+        </div>
+      )}
 
       <div style={{display:'flex', gap:8, margin:'8px 0'}}>
         <input placeholder="Search (company, title, location, url)" value={q} onChange={e=>setQ(e.target.value)} style={{flex:1, padding:8}}/>
