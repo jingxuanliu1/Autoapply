@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoApply Assistant</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>AutoApply Assistant</h1>
+    
+    <div class="section">
+      <label for="job-count">Number of jobs to process:</label>
+      <input type="number" id="job-count" value="100" min="1" max="100">
+      <button id="open-jobs-btn" class="primary-btn">Start Batch Apply</button>
+    </div>
+    
+    <div id="progress-section" class="section hidden">
+      <h3>Progress</h3>
+      <div id="progress-text">Idle</div>
+      <progress id="progress-bar" value="0" max="100" style="width:100%;height:20px;margin-top:8px"></progress>
+    </div>
+    
+    <div id="status" class="status"></div>
+    
+    <div id="prompt-section" class="prompt-section hidden">
+      <h2>Missing Information</h2>
+      <p class="prompt-info">Please answer the following question. Your answer will be saved for future applications.</p>
+      
+      <div id="questions-container"></div>
+      
+      <button id="save-answers-btn" class="primary-btn">Save & Continue</button>
+      <button id="skip-btn" class="secondary-btn">Skip</button>
+    </div>
+    
+    <div class="section stats hidden" id="stats">
+      <h3>Session Stats</h3>
+      <p>Opened: <span id="stat-opened">0</span></p>
+      <p>Filled: <span id="stat-filled">0</span></p>
+      <p>Submitted: <span id="stat-submitted">0</span></p>
+    </div>
+  </div>
+  
+  <script src="popup.js" type="module"></script>
+</body>
+</html>

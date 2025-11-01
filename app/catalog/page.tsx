@@ -89,6 +89,15 @@ export default function CatalogPage() {
           {[50,100,200,500].map(n => <option key={n} value={n}>{n}</option>)}
         </select>
         <button onClick={load}>Reload</button>
+        <button 
+          onClick={() => {
+            window.postMessage({ type: 'AUTOAPPLY_START', payload: { count: 100 } }, '*');
+            alert('Auto-apply started! Keep this tab open. Check the extension popup for progress.');
+          }}
+          style={{background:'#10b981', color:'white', fontWeight:'bold'}}
+        >
+          🚀 Auto-Apply 100
+        </button>
       </div>
 
       <table width="100%" cellPadding={8} style={{borderCollapse:'collapse'}}>
