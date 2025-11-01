@@ -37,7 +37,13 @@ export default function SourcesPage() {
     // Example RAW: https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/README.md
     const readme = src.url;
     const q = new URLSearchParams({ readme }).toString();
-    const r = await fetch(`${INGEST_ENDPOINT}?${q}`, { method: 'POST' });
+    const { data: { session } } = await supabase.auth.getSession();
+    const r = await fetch(`${INGEST_ENDPOINT}?${q}`, { 
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${session?.access_token || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`
+      }
+    });
     if (!r.ok) return alert(`Ingest failed: ${r.status}`);
     alert('Ingest started / done (check Postings).');
   }
